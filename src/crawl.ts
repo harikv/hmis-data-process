@@ -1,6 +1,7 @@
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as _ from 'lodash';
+import * as failures from './failures.json';
 
 const MONTH_ARRAY = ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March'];
 
@@ -80,6 +81,7 @@ const getDataFiles = async (browser: puppeteer.Browser, year: string, state: str
         await page.click('input#ctl00_ContentPlaceHolder1_gridDirList_ctl02_imgDir');
         // Go to appropriate state
         await page.waitForSelector('table#ctl00_ContentPlaceHolder1_gridDirList');        
+        await page.waitForTimeout(500);
         // Get ID of appropriate Year
         const stateID = await page.$$eval('table#ctl00_ContentPlaceHolder1_gridDirList > tbody > tr', (rows, state) => {
             const selectedRow = rows.find((row) => { 
@@ -258,4 +260,36 @@ const main = async () => {
     await browser.close();    
 };
 
-main();
+const runFailures = async () => {    
+    const browser = await initBrowser();    
+    const failuresObj = failures as Status;
+    const yearsToCrawl = _.keys(failuresObj);
+    // set up tracking for each year and each state
+    const status: Status = {};
+    // const testStates = ["A & N Islands"];
+    for (const year of yearsToCrawl) {        
+    // for (const year of testYears) {
+        const states = _.keys(failuresObj[year]);                
+        for (const state of states) {
+        // for (const state of testStates) {
+            const success = await getDataFiles(browser, year, state);            
+            if (success == true) {
+                console.log(`Downloaded all data for FY${year} for state ${state} successfully!`);
+            } else {
+                if (_.has(status, year)) {
+                    status[year][state] = false;
+                } else {
+                    status[year] = {};
+                    status[year][state] = false;
+                }
+            }
+        }
+    }
+    console.log(`Failures: `);
+    console.log(status);
+    console.log(JSON.stringify(status));
+    await browser.close();    
+}
+
+runFailures();
+// main();

@@ -2,4 +2,4 @@
 compiled/
 data/
 node_modules/
-status/
+failures.json

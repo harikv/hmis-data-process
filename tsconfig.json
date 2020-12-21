@@ -3,8 +3,10 @@
         "module": "commonjs",
         "target": "es2019",
         "noImplicitAny": true,
-        "sourceMap": false,
+        "sourceMap": false,        
+        "resolveJsonModule": true,
+        "rootDir": "src",
         "outDir": "compiled"
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "status/**/*"]
 }
