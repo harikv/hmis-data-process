@@ -87,8 +87,10 @@ dependencies:
   - zipp=3.4.0=pyhd3eb1b0_0
   - zlib=1.2.11=h1de35cc_3
   - pip:
+    - et-xmlfile==1.0.1
+    - jdcal==1.4.1
     - numpy==1.19.4
+    - openpyxl==3.0.5
     - pandas==1.1.5
     - pytz==2020.4
-    - xlrd==2.0.1
 prefix: /Users/hari/miniconda3/envs/hmis-data-process

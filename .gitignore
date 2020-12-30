@@ -3,3 +3,4 @@ compiled/
 data/
 node_modules/
 failures.json
+output/
